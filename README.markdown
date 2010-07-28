@@ -40,4 +40,3 @@ No attempt is made by this plugin to store your passphrase, which you may be pro
 ## TODO
 
 1. Publish this plugin to a public repository.
-2. Publish the *.asc files along with the artifacts.

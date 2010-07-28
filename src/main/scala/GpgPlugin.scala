@@ -8,6 +8,13 @@ trait GpgPlugin extends BasicManagedProject {
 
   lazy val sign = signAction
 
+  val signaturesConfig = config("signatures") 
+
+  override def artifacts = super.artifacts flatMap { artifact =>
+    val ascArtifact = Artifact(artifact.name, "asc", artifact.extension+".asc", artifact.classifier, Seq(signaturesConfig), None)
+    Seq(artifact, ascArtifact)
+  }
+
   def signAction = signTask(artifacts) 
     .dependsOn(super.publishAction.dependencies : _*)
     .describedAs("Signs each artifact with GnuPG.")
@@ -18,10 +25,14 @@ trait GpgPlugin extends BasicManagedProject {
 
   def signArtifact(artifact: Artifact): Option[String] = {
     val path = artifact2Path(artifact)
-    List(gpgCommand, "-ab", "--yes", path).mkString(" ") ! match {
-      case 0 => None
-      case _ => Some("error signing artifact: "+path)
-    }    
+    path.ext match {
+      case "asc" => None
+      case _ =>
+        List(gpgCommand, "-ab", "--yes", path).mkString(" ") ! match {
+          case 0 => None
+          case _ => Some("error signing artifact: "+path)
+        }    
+    }
   }
 
   protected def artifact2Path(artifact: Artifact): Path = {
