@@ -18,7 +18,7 @@ trait GpgPlugin extends BasicManagedProject {
 
   def signArtifact(artifact: Artifact): Option[String] = {
     val path = artifact2Path(artifact)
-    List(gpgCommand, "-ab", path).mkString(" ") ! match {
+    List(gpgCommand, "-ab", "--yes", path).mkString(" ") ! match {
       case 0 => None
       case _ => Some("error signing artifact: "+path)
     }    
