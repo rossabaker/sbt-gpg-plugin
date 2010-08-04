@@ -36,7 +36,3 @@ The `sign` action runs just before `publish`.  It signs each artifact with GnuPG
 ## gnupg-agent
 
 No attempt is made by this plugin to store your passphrase, which you may be prompted for several times.  I use [gnupg-agent](http://www.debian-administration.org/article/Using_gnupg-agent_to_securely_retain_keys) to reduce these prompts.
-
-## TODO
-
-1. Publish this plugin to a public repository.
