@@ -2,11 +2,6 @@
 
 A [simple build tool](http://code.google.com/p/simple-build-tool) plugin for signing the project's artifacts with [GnuPG](http://www.gnupg.org/).  It is inspired by [maven-gpg-plugin](http://maven.apache.org/plugins/maven-gpg-plugin/).
 
-## Installation
-
-1. Download this plugin.
-2. run `sbt publish-local`
-
 ## Usage
 
 1. Create a project/plugins/Plugins.scala:
