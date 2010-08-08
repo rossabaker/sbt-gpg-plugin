@@ -9,10 +9,8 @@ trait GpgPlugin extends BasicManagedProject {
 
   lazy val sign = signAction
 
-  val signaturesConfig = config("signatures") 
-
   override def artifacts = super.artifacts flatMap { artifact =>
-    val ascArtifact = Artifact(artifact.name, "asc", artifact.extension+".asc", artifact.classifier, Seq(signaturesConfig), None)
+    val ascArtifact = Artifact(artifact.name, "asc", artifact.extension+".asc", artifact.classifier, Seq(Configurations.Optional), None)
     Seq(artifact, ascArtifact)
   }
 
