@@ -17,7 +17,7 @@ trait GpgPlugin extends BasicManagedProject {
   }
 
   def signAction = signTask(artifacts) 
-    .dependsOn(super.publishAction.dependencies : _*)
+    .dependsOn(makePom)
     .describedAs("Signs each artifact with GnuPG.")
 
   def signTask(artifacts: Iterable[Artifact]): Task = task {
@@ -44,7 +44,8 @@ trait GpgPlugin extends BasicManagedProject {
     outputPath / filename
   }
 
-  override def publishAction = super.publishAction dependsOn(sign)
+  override def deliverLocalAction = super.deliverLocalAction dependsOn(sign)
+  override def deliverAction = super.deliverAction dependsOn(sign)
 
   /*
    * http://github.com/rossabaker/sbt-gpg-plugin/issues#issue/1
