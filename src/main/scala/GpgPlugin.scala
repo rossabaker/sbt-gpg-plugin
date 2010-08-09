@@ -6,22 +6,33 @@ import scala.xml._
 
 trait GpgPlugin extends BasicManagedProject {
   def gpgCommand: String = "gpg"
+  lazy val skipGpgSign = systemOptional[Boolean]("gpg.skip", false).value
 
   lazy val sign = signAction
 
   val signaturesConfig = config("signatures") 
 
-  override def artifacts = super.artifacts flatMap { artifact =>
-    val ascArtifact = Artifact(artifact.name, "asc", artifact.extension+".asc", artifact.classifier, Seq(signaturesConfig), None)
-    Seq(artifact, ascArtifact)
-  }
+  override def artifacts = 
+    if (skipGpgSign)
+      super.artifacts
+    else 
+      super.artifacts flatMap { artifact =>
+        val ascArtifact = Artifact(artifact.name, "asc", artifact.extension+".asc", artifact.classifier, Seq(signaturesConfig), None)
+        Seq(artifact, ascArtifact)
+      }
 
   def signAction = signTask(artifacts) 
     .dependsOn(makePom)
     .describedAs("Signs each artifact with GnuPG.")
 
   def signTask(artifacts: Iterable[Artifact]): Task = task {
-    artifacts.toStream flatMap signArtifact firstOption
+    if (skipGpgSign) {
+      log.info("Skipping signing of artifacts")
+      None
+    }
+    else {
+      artifacts.toStream flatMap signArtifact firstOption
+    }
   }
 
   def signArtifact(artifact: Artifact): Option[String] = {
@@ -31,7 +42,8 @@ trait GpgPlugin extends BasicManagedProject {
       case _ =>
         List(gpgCommand, "-ab", "--yes", path).mkString(" ") ! match {
           case 0 => None
-          case _ => Some("error signing artifact: "+path)
+          case _ => Some("error signing artifact: '"+path+"'."+
+            "Set system property gpg.skip=true to skip the signing step.")
         }    
     }
   }
