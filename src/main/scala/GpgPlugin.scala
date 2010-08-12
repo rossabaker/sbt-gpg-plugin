@@ -39,6 +39,8 @@ trait GpgPlugin extends BasicManagedProject {
     val path = artifact2Path(artifact)
     path.ext match {
       case "asc" => None
+      case "md5" => None
+      case "sha1" => None
       case _ =>
         List(gpgCommand, "-ab", "--yes", path).mkString(" ") ! match {
           case 0 => None
