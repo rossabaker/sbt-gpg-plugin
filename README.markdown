@@ -31,3 +31,9 @@ The `sign` action runs just before `publish`.  It signs each artifact with GnuPG
 ## gnupg-agent
 
 No attempt is made by this plugin to store your passphrase, which you may be prompted for several times.  I use [gnupg-agent](http://www.debian-administration.org/article/Using_gnupg-agent_to_securely_retain_keys) to reduce these prompts.
+
+## Changes
+
+### v0.2.0
+
+- Runs `sign` before `publish` instead of `deliver` and `deliverLocal`.  This makes it less obtrusive and plays nicer with [Maven-SBT](https://github.com/codahale/maven-sbt).
