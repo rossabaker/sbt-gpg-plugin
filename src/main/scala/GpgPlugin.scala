@@ -6,7 +6,7 @@ import scala.xml._
 
 trait GpgPlugin extends BasicManagedProject {
   def gpgCommand: String = "gpg"
-  lazy val skipGpgSign = systemOptional[Boolean]("gpg.skip", false).value
+  lazy val skipGpgSign = systemOptional[Boolean]("gpg.skip", true).value
 
   lazy val sign = signAction
 
